@@ -4,12 +4,17 @@
 |---|-------|-------|-----------|------------|------|
 | 1 | implementation (prompt: docs/prompts/01-go-spec-v0.md) | Claude Sonnet 5 (claude-sonnet-5) | 13.01M¹ | 74,968 | ≈$3.89 |
 | 2 | review subagents (docs/prompts/01) | claude-opus-4-7 | 1.16M¹ | 18,100 | ≈$1.73 |
-| **Σ** | | | 14.17M¹ | 93,068 | ≈$5.62 |
+| 3 | docs fix (prompt: docs/prompts/02-fix-v0.md) | Claude Sonnet 5 (claude-sonnet-5) | unknown² | unknown² | not measured² |
+| **Σ** | | | 14.17M¹ ² | 93,068² | ≈$5.62² |
 
 ¹ input includes cache reads (sonnet 12.78M cache-read + 233k cache-write;
 opus 1.04M cache-read + 121k cache-write); cost is an estimate at public API
 prices per `standards/reporting.md` — measured post-run by the lab from local
 session transcripts.
+
+² prompt 02 ran as a claude.ai bridge continuation of the same session;
+its counters are not present in the local transcripts, so the totals exclude
+it (docs-only edits in a fully cached session — marginal).
 
 Evidence: measured post-run by the lab from local Claude Code session
 transcripts (`tools/session-usage.py`, deduplicated by request id) — the
