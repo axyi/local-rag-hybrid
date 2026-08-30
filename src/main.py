@@ -4,7 +4,9 @@ Company Knowledge Base Assistant - Main Entry Point
 """
 
 import sys
+
 from assistant import CompanyKBAssistant
+
 
 def main():
     """Main entry point for the assistant."""
@@ -13,7 +15,11 @@ def main():
         from rag.build_index import build_index
         build_index()
         return
-    
+
+    if len(sys.argv) > 1 and sys.argv[1] == "bench":
+        from rag.bench import run_bench
+        sys.exit(run_bench())
+
     # Interactive Q&A mode
     assistant = CompanyKBAssistant()
     
