@@ -64,9 +64,3 @@ def run_bench() -> int:
     out_path.write_text(output + "\n", encoding="utf-8")
 
     return 0 if len(rows) == len(questions) and metrics["hybrid"]["recall@5"] >= RECALL_FLOOR else 1
-
-
-if __name__ == "__main__":
-    import sys
-
-    sys.exit(run_bench())

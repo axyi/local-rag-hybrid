@@ -13,8 +13,7 @@ def tokenize(text: str) -> list[str]:
 
 class BM25Index:
     def __init__(self, chunks: list[dict]) -> None:
-        self._corpus_size = len(chunks)
-        if self._corpus_size == 0:
+        if not chunks:
             self._bm25 = None
             return
         tokenized = [tokenize(chunk["text"]) for chunk in chunks]
