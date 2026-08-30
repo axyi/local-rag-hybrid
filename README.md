@@ -56,6 +56,8 @@ uv run --locked pytest
 ## Build report
 
 Built with AI agents under the lab workflow (spec-driven, one prompt = one
-commit). Headline: *pending — filled by the v0 run report.*
+commit). Headline: spec 9 265 tokens · 1 prompt · first run: yes (0/5
+repairs) · 30 tests · hybrid recall@5 0.9 vs 0.4 vector-only · ≈ $5.6
+(estimated at public API prices).
 Full report: [docs/reports/](docs/reports/), token accounting:
 [docs/llm-usage.md](docs/llm-usage.md).

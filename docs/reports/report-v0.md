@@ -106,6 +106,8 @@ c4915a1 test: assert CANDIDATE_POOL/TOP_K wiring and a duplicate-free MAX_KEYWOR
 
 - `data/` (corpus + built index) is git-ignored and was never committed, per
   REQ-09 — restore locally with the clone command in spec section 2.
-- `docs/llm-usage.md` tokens/cost are `unknown`: the Claude Code CLI harness
-  does not expose per-session token/cost counters to the agent. A public-API-
-  price estimate is in `docs/reports/tg-post-v0.md`.
+- `docs/llm-usage.md` tokens/cost are now measured: the lab measured them
+  post-run from local Claude Code session transcripts (deduplicated by
+  request id) — the in-session harness still does not expose these counters
+  to the agent directly. See `docs/llm-usage.md` for the figures and
+  `docs/reports/tg-post-v0.md` for the public-API-price cost estimate.
