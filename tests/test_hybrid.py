@@ -3,6 +3,7 @@ import time
 import pytest
 
 import rag.query as query_module
+from config import CANDIDATE_POOL, TOP_K
 
 
 @pytest.fixture
@@ -14,12 +15,24 @@ def hybrid_env(monkeypatch):
 
 
 def test_fusion_order(monkeypatch, hybrid_env):
+    captured = {}
+
+    def vector_stub(q, n):
+        captured["vector_n"] = n
+        return [0, 1, 2]
+
+    def fts_stub(q, k, n):
+        captured["fts_n"] = n
+        return [2, 0, 5]
+
     monkeypatch.setattr(query_module, "expand_query", lambda q: [])
-    monkeypatch.setattr(query_module, "_vector_ranking", lambda q, n: [0, 1, 2])
-    monkeypatch.setattr(query_module, "_fts_ranking", lambda q, k, n: [2, 0, 5])
+    monkeypatch.setattr(query_module, "_vector_ranking", vector_stub)
+    monkeypatch.setattr(query_module, "_fts_ranking", fts_stub)
 
     result = query_module.retrieve("вопрос")
     assert [c["source"] for c in result] == ["s0", "s2", "s1", "s5"]
+    assert captured["vector_n"] == CANDIDATE_POOL
+    assert captured["fts_n"] == CANDIDATE_POOL
 
 
 def test_parallelism(monkeypatch, hybrid_env):
@@ -73,11 +86,18 @@ def test_keywords_forwarded(monkeypatch, hybrid_env):
 
 
 def test_vector_mode_skips_expansion(monkeypatch, hybrid_env):
+    captured = {}
+
     def fail_expand(q):
         raise AssertionError("expand_query should not be called in vector mode")
 
+    def vector_stub(q, n):
+        captured["vector_n"] = n
+        return [3, 4]
+
     monkeypatch.setattr(query_module, "expand_query", fail_expand)
-    monkeypatch.setattr(query_module, "_vector_ranking", lambda q, n: [3, 4])
+    monkeypatch.setattr(query_module, "_vector_ranking", vector_stub)
 
     result = query_module.retrieve("вопрос", mode="vector")
     assert [c["source"] for c in result] == ["s3", "s4"]
+    assert captured["vector_n"] == TOP_K

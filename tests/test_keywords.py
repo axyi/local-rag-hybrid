@@ -54,6 +54,18 @@ def test_cap_and_dedup(monkeypatch):
     assert len(result) == MAX_KEYWORDS
 
 
+def test_cap_without_duplicates(monkeypatch):
+    raw = "one, two, three, four, five, six, seven, eight"
+
+    def fake_post(url, json=None, timeout=None):
+        return FakeResponse(json_data={"response": raw})
+
+    _patch_post(monkeypatch, fake_post)
+    result = keywords.expand_query("вопрос")
+    assert result == ["one", "two", "three", "four", "five", "six"]
+    assert len(result) == MAX_KEYWORDS
+
+
 def test_drop_question_echo(monkeypatch):
     question = "Как настроить"
 
