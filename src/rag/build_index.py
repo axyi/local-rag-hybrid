@@ -1,23 +1,22 @@
-import faiss
 import pickle
 import sys
 from pathlib import Path
 
+import faiss
+
 # Add parent directory to path for config import
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from rag.ingest import ingest_documents
+from config import CHUNKS_PATH, FAISS_INDEX_PATH
 from rag.chunk import chunk_documents
 from rag.embed import embed_chunks
-from config import FAISS_INDEX_PATH, CHUNKS_PATH
+from rag.ingest import ingest_documents
 
 
 def build_index():
     """Build FAISS index from documents."""
-    # Resolve paths relative to src directory
-    src_dir = Path(__file__).parent.parent
-    index_path = src_dir / FAISS_INDEX_PATH
-    chunks_path = src_dir / CHUNKS_PATH
-    
+    index_path = Path(FAISS_INDEX_PATH)
+    chunks_path = Path(CHUNKS_PATH)
+
     print("📥 Loading documents...")
     documents = ingest_documents()
 
@@ -38,6 +37,7 @@ def build_index():
     index.add(embeddings)
 
     print("💾 Saving...")
+    index_path.parent.mkdir(parents=True, exist_ok=True)
     faiss.write_index(index, str(index_path))
     with open(chunks_path, "wb") as f:
         pickle.dump(chunks, f)
